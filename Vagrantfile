@@ -24,18 +24,29 @@ servers.each do |servers|
     srv.vm.box = servers["box"]
     
     srv.vm.network "private_network", ip: servers["ip"]
+    srv.vm.network :public_network,
+	    :dev => "br0",
+	    :network_name => "default",
+	    :mode => "bridge",
+	    :type => "bridge"
 
-  
-   servers["forward_ports"].each do |port| 
-     srv.vm.network :forwarded_port, guest: port["guest"], host: port["host"]
-  end
+    servers["forward_ports"].each do |port| 
+      srv.vm.network :forwarded_port, guest: port["guest"], host: port["host"]
+    end
 
-   srv.vm.provider :virtualbox do |v|
+    srv.vm.provider :libvirt do |v|
         v.cpus = servers["cpu"]
         v.memory = servers["ram"]
-  end
+	v.graphics_passwd = "vagrant"
+	v.graphics_ip = "0.0.0.0"
+    end
+
+    srv.vm.provider :virtualbox do |v|
+        v.cpus = servers["cpu"]
+        v.memory = servers["ram"]
+    end
    
-    srv.vm.synced_folder "./", "/home/vagrant/#{servers['name']}"
+    srv.vm.synced_folder "./", "/home/jo/vagrant/servers/#{servers['name']}"
     
     servers["shell_commands"].each do |sh|
       srv.vm.provision "shell", inline: sh["shell"]
