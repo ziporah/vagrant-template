@@ -46,7 +46,7 @@ servers.each do |servers|
         v.memory = servers["ram"]
     end
    
-    srv.vm.synced_folder "./", "/home/jo/vagrant/servers/#{servers['name']}"
+    srv.vm.synced_folder "./", "/home/vagrant/#{servers['name']}"
     
     servers["shell_commands"].each do |sh|
       srv.vm.provision "shell", inline: sh["shell"]
