@@ -1,1 +1,3 @@
 .vagrant
+modules
+Gemfile.lock
