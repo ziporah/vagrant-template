@@ -2,7 +2,8 @@
 - 
   box: puppetlabs/centos-7.0-64-puppet-enterprise
   cpu: 1
-  ip: "172.17.8.101"
+  virt_ip: "192.168.121.101"
+  pub_ip: "172.17.8.101"
   name: node-01
   forward_ports:
       - { guest: 80, host: 8080 }
@@ -11,3 +12,17 @@
       - { shell: 'yum install -y wget git lvm2 device-mapper-libs' }
       - { shell: '/opt/puppet/bin/gem install r10k && ln -s /opt/puppet/bin/r10k /usr/bin/r10k || true'}
       - { shell: 'cp /home/vagrant/node-01/Puppetfile /tmp && cd /tmp && r10k puppetfile install --verbose' }
+
+- 
+  box: puppetlabs/centos-7.0-64-puppet-enterprise
+  cpu: 2
+  virt_ip: "192.168.121.102"
+  pub_ip: "172.17.8.102"
+  name: nexus
+  forward_ports:
+      - { guest: 8081, host: 8181 }
+  ram: 2048
+  shell_commands: 
+      - { shell: 'yum install -y wget git lvm2 device-mapper-libs' }
+      - { shell: '/opt/puppet/bin/gem install r10k && ln -s /opt/puppet/bin/r10k /usr/bin/r10k || true'}
+      - { shell: 'cp /home/vagrant/nexus/Puppetfile /tmp && cd /tmp && r10k puppetfile install --verbose' }

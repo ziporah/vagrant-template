@@ -13,6 +13,14 @@ servers = YAML.load_file('servers.yaml')
  
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+#    config.proxy.http     = "http://192.168.0.2:3128/"
+#    config.yum_proxy.http    = "http://apt-cacher-ng.lanzone.home:3142/"
+#    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+    config.apt_proxy.http = "http://apt-cacher-ng.lanzone.home:3142"
+    config.apt_proxy.https    = "DIRECT"
+  end
  
   # Iterate through entries in YAML file
 servers.each do |servers|
@@ -23,15 +31,16 @@ servers.each do |servers|
     
     srv.vm.box = servers["box"]
     
-    srv.vm.network "private_network", ip: servers["ip"]
+    srv.vm.network "private_network", ip: servers["virt_ip"]
     srv.vm.network :public_network,
 	    :dev => "br0",
 	    :network_name => "default",
 	    :mode => "bridge",
-	    :type => "bridge"
-
+	    :type => "bridge",
+            :ip => servers["pub_ip"]
     servers["forward_ports"].each do |port| 
-      srv.vm.network :forwarded_port, guest: port["guest"], host: port["host"]
+      srv.vm.network :forwarded_port, guest: port["guest"], host: port["host"], host_ip: "0.0.0.0"
+
     end
 
     srv.vm.provider :libvirt do |v|
@@ -39,6 +48,7 @@ servers.each do |servers|
         v.memory = servers["ram"]
 	v.graphics_passwd = "vagrant"
 	v.graphics_ip = "0.0.0.0"
+	v.storage_pool_name = "vagrant"
     end
 
     srv.vm.provider :virtualbox do |v|
