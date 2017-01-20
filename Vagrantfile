@@ -31,13 +31,14 @@ servers.each do |servers|
     
     srv.vm.box = servers["box"]
     
-    srv.vm.network "private_network", ip: servers["virt_ip"]
+    srv.vm.network "private_network"
+	# ,ip: servers["virt_ip"]
     srv.vm.network :public_network,
+#            :ip => servers["pub_ip"],
 	    :dev => "br0",
 	    :network_name => "default",
 	    :mode => "bridge",
-	    :type => "bridge",
-            :ip => servers["pub_ip"]
+	    :type => "bridge"
     servers["forward_ports"].each do |port| 
       srv.vm.network :forwarded_port, guest: port["guest"], host: port["host"], host_ip: "0.0.0.0"
 

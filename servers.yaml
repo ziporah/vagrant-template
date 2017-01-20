@@ -2,8 +2,6 @@
 - 
   box: puppetlabs/centos-7.0-64-puppet-enterprise
   cpu: 1
-  virt_ip: "192.168.121.101"
-  pub_ip: "172.17.8.101"
   name: node-01
   forward_ports:
       - { guest: 80, host: 8080 }
@@ -16,8 +14,6 @@
 - 
   box: puppetlabs/centos-7.0-64-puppet-enterprise
   cpu: 2
-  virt_ip: "192.168.121.102"
-  pub_ip: "172.17.8.102"
   name: nexus
   forward_ports:
       - { guest: 8081, host: 8181 }
