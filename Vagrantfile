@@ -31,7 +31,7 @@ servers.each do |servers|
     
     srv.vm.box = servers["box"]
     
-    srv.vm.network "private_network"
+    srv.vm.network "private_network",type: "dhcp"
 	# ,ip: servers["virt_ip"]
     srv.vm.network :public_network,
 #            :ip => servers["pub_ip"],
